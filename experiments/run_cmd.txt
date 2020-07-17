@@ -1,0 +1,1 @@
+sudo ./snapshot "./sd-vbs-bin/tracking/data/vga/tracking ./sd-vbs-bin/tracking/data/vga/" "./sd-vbs-bin/mser/data/vga/mser ./sd-vbs-bin/mser/data/vga/" "./sd-vbs-bin/sift/data/vga/sift ./sd-vbs-bin/sift/data/vga/" "./sd-vbs-bin/disparity/data/vga/disparity ./sd-vbs-bin/disparity/data/vga/" -o /tmp/mc_4sdvbs_vga -fr -p 10
