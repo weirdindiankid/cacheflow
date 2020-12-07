@@ -65,12 +65,12 @@ struct cache_sample {
  * data. */
 
 #define CACHE_BUF_BASE1 0x0fee00000UL
-#define CACHE_BUF_BASE2 0x121200000UL
+#define CACHE_BUF_BASE2 0x7E800000UL
 
 #define CACHE_BUF_END1 0x0fee00000UL
 
 //#define CACHE_BUF_END1 0x100000000UL
-#define CACHE_BUF_END2 0x180000000UL
+#define CACHE_BUF_END2  0x7FFFFFFFUL
 
 #define CACHE_BUF_SIZE1 (CACHE_BUF_END1 - CACHE_BUF_BASE1)
 #define CACHE_BUF_SIZE2 (CACHE_BUF_END2 - CACHE_BUF_BASE2)
@@ -291,32 +291,47 @@ static const struct file_operations dumpcache_fops = {
 	.release = seq_release
 };
 
-static inline void asm_flush_cache(void) {
-    asm volatile(
-        "MCR p15, 0, r0, c7, c5, 0\t\n"
-        "MCR p15, 0, Rd, c7, c6, 0"
-    );
-}
+// static inline void asm_flush_cache(void) {
+//     asm volatile(
+//         "MCR p15, 0, r0, c7, c5, 0\t\n"
+//         "MCR p15, 0, Rd, c7, c6, 0"
+//     );
+// }
 
 // Ramindex operation
 // 4.3.64 in ARM Cortex-A57 MPCore Processor Technical Reference Manual
+// static inline void asm_ramindex_mcr(u32 ramindex)
+// {
+// 	asm volatile(
+// 	    "sys #0, c15, c4, #0, %0\t\n"
+// 	    "dsb sy\t\n"
+// 	    "isb" :: "r" (ramindex));
+// }
+
+
+// // reading from DL1DATA0_EL1
+// // 4.3.63 in ARM Cortex-A57 MPCore Processor Technical Reference Manual
+// static inline void asm_ramindex_mrc(u32 *dl1data, u8 sel)
+// {
+// 	if (sel & 0x01) asm volatile("mrs %0,S3_0_c15_c1_0" : "=r"(dl1data[0]));
+// 	if (sel & 0x02) asm volatile("mrs %0,S3_0_c15_c1_1" : "=r"(dl1data[1]));
+// 	if (sel & 0x04) asm volatile("mrs %0,S3_0_c15_c1_2" : "=r"(dl1data[2]));
+// 	if (sel & 0x08) asm volatile("mrs %0,S3_0_c15_c1_3" : "=r"(dl1data[3]));
+// }
+
 static inline void asm_ramindex_mcr(u32 ramindex)
 {
-	asm volatile(
-	    "sys #0, c15, c4, #0, %0\t\n"
-	    "dsb sy\t\n"
-	    "isb" :: "r" (ramindex));
+	asm volatile("mcr p15, 0, %0, c15, c4, 0" : : "r" (ramindex));
+	asm volatile("dsb");
+	asm volatile("isb");
 }
 
-
-// reading from DL1DATA0_EL1
-// 4.3.63 in ARM Cortex-A57 MPCore Processor Technical Reference Manual
-static inline void asm_ramindex_mrc(u32 *dl1data, u8 sel)
+static inline void asm_ramindex_mrc(u32 *dl1data, u8 sel) 
 {
-	if (sel & 0x01) asm volatile("mrs %0,S3_0_c15_c1_0" : "=r"(dl1data[0]));
-	if (sel & 0x02) asm volatile("mrs %0,S3_0_c15_c1_1" : "=r"(dl1data[1]));
-	if (sel & 0x04) asm volatile("mrs %0,S3_0_c15_c1_2" : "=r"(dl1data[2]));
-	if (sel & 0x08) asm volatile("mrs %0,S3_0_c15_c1_3" : "=r"(dl1data[3]));
+	if (sel & 0x01) asm volatile("mrc p15, 0, %0, c15, c1, 0" : "=r" (dl1data[0]));
+	if (sel & 0x02) asm volatile("mrc p15, 0, %0, c15, c1, 0" : "=r" (dl1data[1]));
+	if (sel & 0x04) asm volatile("mrc p15, 0, %0, c15, c1, 0" : "=r" (dl1data[2]));
+	if (sel & 0x08) asm volatile("mrc p15, 0, %0, c15, c1, 0" : "=r" (dl1data[3]));
 }
 
 

@@ -865,7 +865,7 @@ void read_cache_to_file(char * filename, int index) {
 	for (cache_set_idx = 0; cache_set_idx < NUM_CACHESETS; cache_set_idx++) {
 		for (cache_line_idx = 0; cache_line_idx < NUM_CACHELINES; cache_line_idx++) {
 			bytes_to_write += sprintf(csv_file_buf + bytes_to_write,
-						  "%05d,0x%012lx\n",
+						  "%05d,0x%08llx\n",
 						  cache_contents->sets[cache_set_idx]
 						  .cachelines[cache_line_idx].pid,
 						  cache_contents->sets[cache_set_idx]
