@@ -8,5 +8,5 @@
 </p>
 <hr/>
 <p>
-Tarapore, D. et al. (2020) Observing the Invisible: Live Cache Inspection for High-Performance Embedded Systems, arXiv.org. Available at: <a href="https://arxiv.org/abs/2007.12271">https://arxiv.org/abs/2007.12271</a> (Accessed: 27 July 2020).
+D. Tarapore, S. Roozhkhosh, S. Brzozowski and R. Mancuso, "Observing the Invisible: Live Cache Inspection for High-Performance Embedded Systems," in IEEE Transactions on Computers, doi: 10.1109/TC.2021.3060650.3060650.
 </p>
